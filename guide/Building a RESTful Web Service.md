@@ -45,3 +45,58 @@ http://localhost:8080/greeting?name=User
 类似其他Spring开始指南，你可以从头开始一步一步完成或者绕过你已经熟悉的步骤。无论哪种方法，你最终可以将这些代码应用到到你工作中。
 
 从头开始，请移步到[Starting with Spring Initializr](https://spring.io/guides)
+
+跳过基础步骤，按照如下操作：
+
+- [下载](https://github.com/spring-guides/gs-rest-service/archive/main.zip)本指南的资源仓库，或者使用[git](https://spring.io/understanding/Git)克隆它:
+```
+git clone https://github.com/spring-guides/gs-rest-service.git
+```
+
+- 打开```gs-rest-service/initial```
+
+- 创建一个实体类
+
+当你完成上述操作时，你可以在```gs-rest-service/complete```中检查你的结果代码。
+
+## 使用Spring Initializr开始
+
+// TODO
+
+## 创建一个实体类
+
+// TODO
+
+## 创建一个资源控制器
+
+在Spring构建RESRful Web Service的方法中，Http请求是被Controller处理的。这些Controller使用```@RestController```注解进行标记，```GreetingController```详情如下(所在位置:```src/main/java/com/example/restservice/GreetingController.java```)```/greeting```处理```get```请求，处理完成后返回一个```Greeting```的实例:
+
+```
+package com.example.restservice;
+
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class GreetingController {
+
+	private static final String template = "Hello, %s!";
+	private final AtomicLong counter = new AtomicLong();
+
+	@GetMapping("/greeting")
+	public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
+		return new Greeting(counter.incrementAndGet(), String.format(template, name));
+	}
+}
+```
+
+这个Controller比较简洁且只是一个样例，在这个模板下还有很多事情要做，我们接下来一步一步攻克。
+
+```@GetMapping```注解标记了当用户发起```/greeting```的Get http请求时将被映射到```greeting()```方法进行处理。
+
+标记http请求处理方法的其他注解还有，例如```@PostMapping```是用来标记处理post http请求方法的注解，你也可以换一种写法，```@RequestMapping```，但是你需要声明http 请求的方式，这样写```@RequestMapping(method=GET)```
+
+@RequestParam绑定的值是查询参数name，这个参数name作为greeting()的参数name传入，如果查询参数不存在name，设置的defaultValue=world将被作为默认值传入。
